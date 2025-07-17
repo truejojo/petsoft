@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Logo from '@/components/logo';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const Home = () => {
   return (
@@ -20,7 +22,14 @@ const Home = () => {
           Use Petsoft to easily keep track of pets under care. Get lifetime
           access for 299€.
         </p>
-        <div className='mt-10'></div>
+        <div className='mt-10 space-x-3'>
+          <Button size='lg' asChild>
+            <Link href='/signup'>Get started</Link>
+          </Button>
+          <Button size='lg' variant='secondary' asChild>
+            <Link href='/login'>Log in</Link>
+          </Button>
+        </div>
       </div>
     </main>
   );
