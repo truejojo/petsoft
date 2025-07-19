@@ -1,11 +1,11 @@
+'use client';
+
 import Image from 'next/image';
-import { Pet } from '@/types';
+import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 
-type PetListProps = {
-  pets: Pet[];
-};
+const PetList = () => {
+  const { pets } = usePetContextProvider();
 
-const PetList = ({ pets }: PetListProps) => {
   return (
     <ul className='border-b border-light bg-white'>
       {pets.map((pet) => (
