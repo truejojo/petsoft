@@ -2,13 +2,18 @@
 
 import Image from 'next/image';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
+import { useSearchPetContextProvider } from '@/app/app/hooks/useSearchPetContextProvider';
 
 const PetList = () => {
   const { pets, handlePetId } = usePetContextProvider();
+  const { searchText } = useSearchPetContextProvider();
+  const filteredPets = pets.filter((pet) =>
+    pet.name.toLowerCase().includes(searchText.toLocaleLowerCase()),
+  );
 
   return (
     <ul className='border-b border-light bg-white'>
-      {pets.map((pet) => (
+      {filteredPets.map((pet) => (
         <li key={pet.id}>
           <button
             onClick={() => handlePetId(pet.id)}

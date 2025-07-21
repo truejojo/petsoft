@@ -2,6 +2,7 @@ import PetContextProvider from './context/petContextProvider';
 import AppFooter from '@/components/app/footer';
 import AppHeader from '@/components/app/header';
 import BackgroundImage from '@/components/backgroundImage';
+import SearchPetContextProvider from './context/searchPetContextProvider';
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const response = await fetch(
@@ -17,7 +18,9 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
       <BackgroundImage />
       <div className='max-w-[1060px] mx-auto px-4 min-h-screen flex flex-col'>
         <AppHeader />
-        <PetContextProvider data={data}>{children}</PetContextProvider>
+        <PetContextProvider data={data}>
+          <SearchPetContextProvider>{children}</SearchPetContextProvider>
+        </PetContextProvider>
         <AppFooter />
       </div>
     </>
