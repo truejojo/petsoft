@@ -4,14 +4,14 @@ import Image from 'next/image';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 
 const PetList = () => {
-  const { pets, handlePetById } = usePetContextProvider();
+  const { pets, handlePetId } = usePetContextProvider();
 
   return (
     <ul className='border-b border-light bg-white'>
       {pets.map((pet) => (
         <li key={pet.id}>
           <button
-            onClick={() => handlePetById(pet.id)}
+            onClick={() => handlePetId(pet.id)}
             type='button'
             className='flex items-center w-full cursor-pointer px-5 min-h-[70px] py-1 text-base gap-3 hover:bg-[#EFF1F2] focus:bg-[#EFF1F2] text-wrap'
           >

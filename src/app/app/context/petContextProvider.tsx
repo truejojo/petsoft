@@ -5,8 +5,9 @@ import { Pet } from '@/types';
 
 type PetContextType = {
   pets: Pet[];
-  pet: Pet | null;
-  handlePetById: (id: string) => void;
+  selectedPet: Pet | undefined;
+  numbersOfPets: number;
+  handlePetId: (id: string) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -17,16 +18,23 @@ type PetContextProviderProps = {
 };
 
 const PetContextProvider = ({ data, children }: PetContextProviderProps) => {
+  // state
   const [pets, setPets] = useState<Pet[]>(data);
-  const [pet, setPet] = useState<Pet | null>(null);
+  const [petId, setPetId] = useState('');
 
-  const handlePetById = (id: string) => {
-    const selectedPet = pets.find((pet) => pet.id === id) || null;
-    setPet(selectedPet);
+  // derived state
+  const selectedPet = pets.find((pet) => pet.id === petId);
+  const numbersOfPets = pets.length;
+
+  // event handlers / actions
+  const handlePetId = (id: string) => {
+    setPetId(id);
   };
 
   return (
-    <PetContext.Provider value={{ pets, pet, handlePetById }}>
+    <PetContext.Provider
+      value={{ pets, selectedPet, numbersOfPets, handlePetId }}
+    >
       {children}
     </PetContext.Provider>
   );

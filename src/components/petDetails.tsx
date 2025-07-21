@@ -5,19 +5,19 @@ import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 import type { Pet } from '@/types';
 
 const PetDetails = () => {
-  const { pet } = usePetContextProvider();
+  const { selectedPet } = usePetContextProvider();
 
   return (
     <section className='flex flex-col h-full w-full bg-gray-100 pb-6'>
-      {!pet ? (
+      {!selectedPet ? (
         <EmptyView />
       ) : (
         <>
-          <TopBar pet={pet} />
+          <TopBar pet={selectedPet} />
 
-          <PetInfo pet={pet} />
+          <PetInfo pet={selectedPet} />
 
-          <PetNotes pet={pet} />
+          <PetNotes pet={selectedPet} />
         </>
       )}
     </section>
