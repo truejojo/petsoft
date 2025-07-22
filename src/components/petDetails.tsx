@@ -32,6 +32,8 @@ type Props = {
 };
 
 const TopBar = ({ pet }: Props) => {
+  const { handleCheckout } = usePetContextProvider();
+
   return (
     <div className='flex items-center gap-4 py-4 px-6 border-b border-light bg-white'>
       <Image
@@ -45,8 +47,10 @@ const TopBar = ({ pet }: Props) => {
       <h1 className='font-semibold text-3xl'>{pet.name}</h1>
 
       <div className='ml-auto flex items-center gap-2'>
-        <PetButton actionType='edit' />
-        <PetButton actionType='checkout' />
+        <PetButton actionType='edit'>Edit</PetButton>
+        <PetButton actionType='checkout' onClick={() => handleCheckout(pet.id)}>
+          Delete
+        </PetButton>
       </div>
     </div>
   );
