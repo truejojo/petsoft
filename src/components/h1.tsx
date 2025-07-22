@@ -1,7 +1,12 @@
-import React from 'react';
+import { cn } from '@/lib/utils';
 
-const H1 = ({ children }: { children: React.ReactNode }) => {
-  return <h1 className='text-white text-4xl'>{children}</h1>;
+type H1Props = {
+  children: React.ReactNode;
+  className?: string;
+};
+
+const H1 = ({ children, className }: H1Props) => {
+  return <h1 className={cn('text-white text-4xl', className)}>{children}</h1>;
 };
 
 export default H1;
