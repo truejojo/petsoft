@@ -11,9 +11,11 @@ const PetButton = ({ actionType, className }: PetButtonProps) => {
   if (actionType === 'edit') {
     return <Button variant='secondary'>Edit</Button>;
   }
+
   if (actionType === 'checkout') {
     return <Button variant='secondary'>Checkout</Button>;
   }
+
   if (actionType === 'size') {
     return (
       <Button size='icon' className={cn(className)}>
@@ -21,7 +23,6 @@ const PetButton = ({ actionType, className }: PetButtonProps) => {
       </Button>
     );
   }
-  return <Button />;
 };
 
 export default PetButton;
