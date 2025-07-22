@@ -1,5 +1,6 @@
 import Branding from '@/components/branding';
 import ContentBlock from '@/components/contentBlock';
+import PetButton from '@/components/petButton';
 import PetDetails from '@/components/petDetails';
 import PetList from '@/components/petList';
 import SearchForm from '@/components/searchForm';
@@ -17,9 +18,14 @@ const DashboardPage = async () => {
           <SearchForm />
         </div>
 
-        <div className='md:row-start-2 md:row-span-full md:col-start-1 md:col-span-1'>
+        <div className='relative md:row-start-2 md:row-span-full md:col-start-1 md:col-span-1'>
           <ContentBlock>
             <PetList />
+
+            <PetButton
+              actionType='size'
+              className='absolute bottom-4 right-4'
+            />
           </ContentBlock>
         </div>
 

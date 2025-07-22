@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 import type { Pet } from '@/types';
+import PetButton from './petButton';
 
 const PetDetails = () => {
   const { selectedPet } = usePetContextProvider();
@@ -42,6 +43,11 @@ const TopBar = ({ pet }: Props) => {
       />
 
       <h1 className='font-semibold text-3xl'>{pet.name}</h1>
+
+      <div className='ml-auto flex items-center gap-2'>
+        <PetButton actionType='edit' />
+        <PetButton actionType='checkout' />
+      </div>
     </div>
   );
 };
