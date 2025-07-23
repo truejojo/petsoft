@@ -22,10 +22,7 @@ const DashboardPage = async () => {
           <ContentBlock>
             <PetList />
 
-            <PetButton
-              actionType='size'
-              className='absolute bottom-4 right-4'
-            />
+            <PetButton actionType='add' className='absolute bottom-4 right-4' />
           </ContentBlock>
         </div>
 
