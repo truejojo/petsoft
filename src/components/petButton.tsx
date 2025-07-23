@@ -48,7 +48,6 @@ const PetButton = ({
             {actionType === 'add' ? 'Add a new Pet' : 'Edit Pet'}
           </DialogTitle>
         </DialogHeader>
-        Submit
         <PetForm actionType={actionType} />
       </DialogContent>
     </Dialog>
