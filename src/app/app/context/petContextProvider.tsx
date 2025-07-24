@@ -2,6 +2,7 @@
 
 import { useState, createContext } from 'react';
 import { Pet } from '@/types';
+import { addPet } from '@/actions/serverActions';
 
 type PetContextType = {
   pets: Pet[];
@@ -38,10 +39,11 @@ const PetContextProvider = ({ data, children }: PetContextProviderProps) => {
     setPetId(null);
   };
 
-  const handleAddPet = (newPet: Omit<Pet, 'id'>) => {
-    const id = (Math.random() * 1000).toString();
+  const handleAddPet = async (newPet: Omit<Pet, 'id'>) => {
+    // const id = (Math.random() * 1000).toString();
 
-    setPets((prevPets) => [...prevPets, { ...newPet, id }]);
+    // setPets((prevPets) => [...prevPets, { ...newPet, id }]);
+    await addPet(newPet);
   };
 
   return (
