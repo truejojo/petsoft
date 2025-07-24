@@ -2,7 +2,7 @@
 
 import { useState, createContext } from 'react';
 import { Pet } from '@/types';
-import { addPet } from '@/actions/serverActions';
+// import { addPet } from '@/actions/serverActions';
 
 type PetContextType = {
   pets: Pet[];
@@ -10,7 +10,7 @@ type PetContextType = {
   numbersOfPets: number;
   handlePetId: (id: string) => void;
   handleCheckout: (id: string) => void;
-  handleAddPet: (newPet: Omit<Pet, 'id'>) => void;
+  // handleAddPet: (newPet: Omit<Pet, 'id'>) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -39,12 +39,12 @@ const PetContextProvider = ({ data, children }: PetContextProviderProps) => {
     setPetId(null);
   };
 
-  const handleAddPet = async (newPet: Omit<Pet, 'id'>) => {
-    // const id = (Math.random() * 1000).toString();
+  // const handleAddPet = async (newPet: Omit<Pet, 'id'>) => {
+  //   // const id = (Math.random() * 1000).toString();
 
-    // setPets((prevPets) => [...prevPets, { ...newPet, id }]);
-    await addPet(newPet);
-  };
+  //   // setPets((prevPets) => [...prevPets, { ...newPet, id }]);
+  //   // await addPet(newPet);
+  // };
 
   return (
     <PetContext.Provider
@@ -54,7 +54,7 @@ const PetContextProvider = ({ data, children }: PetContextProviderProps) => {
         numbersOfPets,
         handlePetId,
         handleCheckout,
-        handleAddPet,
+        // handleAddPet,
       }}
     >
       {children}
