@@ -3,7 +3,7 @@ import AppFooter from '@/components/app/footer';
 import AppHeader from '@/components/app/header';
 import BackgroundImage from '@/components/backgroundImage';
 import SearchPetContextProvider from './context/searchPetContextProvider';
-import { prisma } from '@/lib/db';
+// import { prisma } from '@/lib/db';
 import { getPets } from '@/actions/serverActions';
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
