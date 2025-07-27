@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { PetProps } from '@/types';
 import { Pet } from '@/generated/prisma';
+import { sleep } from '@/lib/utils';
 
 export const getPets = async (): Promise<Pet[]> => {
   try {
@@ -16,9 +17,11 @@ export const getPets = async (): Promise<Pet[]> => {
 };
 
 export const addPet = async (formData: FormData): Promise<void> => {
+  await sleep(5000);
   const data = createData(formData);
 
-  addDataToDB(data);
+  await addDataToDB(data);
+  revalidatePath('/app', 'layout');
 };
 
 export const editPet = async (
@@ -27,7 +30,8 @@ export const editPet = async (
 ): Promise<void> => {
   const data = createData(formData);
 
-  editDataInDB(id, data);
+  await editDataInDB(id, data);
+  revalidatePath('/app', 'layout');
 };
 
 export const deletePet = async (id: string): Promise<void> => {
@@ -44,7 +48,6 @@ export const deletePet = async (id: string): Promise<void> => {
 
 export const handlePetAction = async (formData: FormData): Promise<void> => {
   const petId = formData.get('id') as string | null;
-
   const data = createData(formData);
 
   if (!data.name || !data.ownerName || !data.age) {
@@ -52,14 +55,11 @@ export const handlePetAction = async (formData: FormData): Promise<void> => {
   }
 
   if (petId) {
-    editDataInDB(petId, data);
+    await editDataInDB(petId, data);
+    revalidatePath(`/app/${petId}`, 'layout');
   } else {
-    addDataToDB(data);
-  }
-
-  revalidatePath('/app');
-  if (petId) {
-    revalidatePath(`/app/${petId}`);
+    await addDataToDB(data);
+    revalidatePath('/app', 'layout');
   }
 };
 
@@ -79,7 +79,6 @@ const createData = (formData: FormData): Omit<PetProps, 'id'> => {
 const addDataToDB = async (data: Omit<PetProps, 'id'>): Promise<void> => {
   try {
     await prisma.pet.create({ data });
-    revalidatePath('/app', 'layout');
   } catch (error) {
     console.error('Error adding pet:', error);
     throw error;
@@ -95,7 +94,6 @@ const editDataInDB = async (
       where: { id },
       data,
     });
-    revalidatePath('/app', 'layout');
   } catch (error) {
     console.error('Error editing pet:', error);
     throw error;
