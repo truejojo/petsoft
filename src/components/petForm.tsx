@@ -6,17 +6,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from './ui/button';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 import { DialogClose, DialogFooter } from './ui/dialog';
-import { handlePetAction } from '@/actions/serverActions';
+// import { handlePetAction } from '@/actions/serverActions';
 
 type PetFormProps = {
   actionType: 'add' | 'edit';
 };
 
 const FetForm = ({ actionType }: PetFormProps) => {
-  const { selectedPet } = usePetContextProvider();
+  const { selectedPet, handlePet } = usePetContextProvider();
 
   return (
-    <form action={handlePetAction} className='flex flex-col gap-6'>
+    <form action={handlePet} className='flex flex-col gap-6'>
       {actionType === 'edit' && (
         <input type='hidden' name='id' value={selectedPet?.id} />
       )}

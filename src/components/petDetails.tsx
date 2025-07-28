@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 import type { PetProps } from '@/types';
 import PetButton from './petButton';
-import { deletePet } from '@/actions/serverActions';
+// import { deletePet } from '@/actions/serverActions';
 
 const PetDetails = () => {
   const { selectedPet } = usePetContextProvider();
@@ -33,7 +33,7 @@ type Props = {
 };
 
 const TopBar = ({ pet }: Props) => {
-  // const { handleCheckout } = usePetContextProvider();
+  const { handleDeletePet } = usePetContextProvider();
 
   return (
     <div className='flex items-center gap-4 py-4 px-6 border-b border-light bg-white'>
@@ -49,7 +49,10 @@ const TopBar = ({ pet }: Props) => {
 
       <div className='ml-auto flex items-center gap-2'>
         <PetButton actionType='edit'>Edit</PetButton>
-        <PetButton actionType='checkout' onClick={() => deletePet(pet.id)}>
+        <PetButton
+          actionType='checkout'
+          onClick={() => handleDeletePet(pet.id)}
+        >
           Delete
         </PetButton>
       </div>
