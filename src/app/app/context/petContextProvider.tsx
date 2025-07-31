@@ -3,14 +3,15 @@
 import { useState, createContext, useOptimistic, startTransition } from 'react';
 import { PetEssentials } from '@/types';
 // import { toast } from 'sonner';
-import { addPet, editPet, createData } from '@/actions/serverActions';
+import { addPet, editPet } from '@/actions/serverActions';
 import { Pet } from '@/generated/prisma';
 
 type PetContextType = {
   pets: Pet[];
   selectedPet: Pet | undefined;
   numbersOfPets: number;
-  handlePet: (formData: FormData) => Promise<void>;
+  handleEditPet: (petData: PetEssentials, petId: Pet['id']) => Promise<void>;
+  handleAddPet: (petData: PetEssentials) => Promise<void>;
   handleDeletePet: (id: Pet['id']) => Promise<void>;
   handlePetId: (id: Pet['id']) => void;
 };
@@ -36,17 +37,6 @@ const PetContextProvider = ({ pets, children }: PetContextProviderProps) => {
     setPetId(id);
   };
 
-  // event handlers / actions: Optimistic
-  const handlePet = async (formData: FormData) => {
-    const petId = formData.get('id') as string | null;
-    const data = await createData(formData);
-
-    if (petId) {
-      await handleEditPet(data, petId);
-    } else {
-      await handleAddPet(data);
-    }
-  };
   const handleAddPet = async (data: PetEssentials) => {
     // Temporäres Pet mit zufälliger ID für Optimistic UI
     const tempId = 'temp-' + Math.random().toString(36);
@@ -72,7 +62,12 @@ const PetContextProvider = ({ pets, children }: PetContextProviderProps) => {
       return;
     }
   };
+
   const handleEditPet = async (data: PetEssentials, petId: Pet['id']) => {
+    if (!petId) {
+      console.error('Pet ID is required for editing.');
+      return;
+    }
     // Ursprüngliches Pet merken
     const prevPet = optimisticPets.find((pet) => pet.id === petId);
     startTransition(() => {
@@ -121,8 +116,9 @@ const PetContextProvider = ({ pets, children }: PetContextProviderProps) => {
         selectedPet,
         numbersOfPets,
         handlePetId,
-        handlePet,
         handleDeletePet,
+        handleAddPet,
+        handleEditPet,
       }}
     >
       {children}
