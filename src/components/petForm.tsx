@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
 import { petFormSchema } from '@/lib/schema';
+import FormFieldWrapper from './formFieldWrapper';
+import ErrorMessage from './errorMessage';
 
 type PetFormProps = {
   actionType: 'add' | 'edit';
@@ -120,11 +122,3 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
 };
 
 export default PetForm;
-
-const FormFieldWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <div className='space-y-1'>{children}</div>;
-};
-
-const ErrorMessage = ({ children }: { children: React.ReactNode }) => {
-  return <p className='text-red-500 text-sm'>{children}</p>;
-};
