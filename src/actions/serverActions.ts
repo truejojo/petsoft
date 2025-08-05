@@ -1,9 +1,20 @@
 'use server';
 
-import { prisma } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { Pet } from '@/generated/prisma';
+import { prisma } from '@/lib/db';
+import { signIn } from '@/lib/auth';
 import { petFormSchema, petIdSchema } from '@/lib/schema';
+import { Pet } from '@/generated/prisma';
+
+// ---- user actions ----
+
+export const logIn = async (formData: FormData) => {
+  const authData = Object.fromEntries(formData.entries());
+
+  await signIn('credentials', authData);
+};
+
+// --- pet actions ---
 
 export const getPets = async (): Promise<Pet[]> => {
   try {
