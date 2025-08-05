@@ -7,7 +7,7 @@ const LoginPage = () => {
     <main className='space-y-5'>
       <H1 className='text-black text-center'>Log In</H1>
 
-      <AuthForm />
+      <AuthForm type='login' />
 
       <p className=''>
         No account yet?{' '}

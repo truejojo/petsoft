@@ -7,7 +7,7 @@ const SignupPage = () => {
     <main className='space-y-5'>
       <H1 className='text-black text-center'>Sign Up</H1>
 
-      <AuthForm />
+      <AuthForm type='signup' />
 
       <p className=''>
         Have an account yet?{' '}
