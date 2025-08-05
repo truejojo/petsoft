@@ -11,12 +11,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
     <form action={logIn} className='space-y-4'>
       <FormFieldWrapper>
         <Label htmlFor='email'>Email</Label>
-        <Input id='email' type='email' />
+        <Input id='email' name='email' type='email' />
       </FormFieldWrapper>
 
       <FormFieldWrapper>
         <Label htmlFor='password'>Password</Label>
-        <Input id='password' type='password' />
+        <Input id='password' name='password' type='password' />
       </FormFieldWrapper>
 
       <Button type='submit'>{type === 'login' ? 'Log In' : 'Sign Up'}</Button>

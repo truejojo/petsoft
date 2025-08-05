@@ -39,16 +39,24 @@ const config = {
     }),
   ],
   callbacks: {
-    authorized: ({ request }) => {
+    authorized: ({ auth, request }) => {
       // Check if the user is authenticated
       // return request?.nextauth?.token?.sub ? true : false;
+      const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccessApp = request.nextUrl.pathname.includes('/app');
 
-      if (isTryingToAccessApp) {
+      if (!isLoggedIn && isTryingToAccessApp) {
         // return request?.nextauth?.token?.sub ? true : false;
         return false;
       }
-      return true;
+
+      if (isLoggedIn && isTryingToAccessApp) {
+        return true;
+      }
+
+      if (!isTryingToAccessApp) {
+        return true;
+      }
     },
   },
 } satisfies NextAuthConfig;
