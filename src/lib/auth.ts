@@ -44,8 +44,6 @@ const config = {
   ],
   callbacks: {
     authorized: ({ auth, request }) => {
-      // Check if the user is authenticated
-      // return request?.nextauth?.token?.sub ? true : false;
       const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccessApp = request.nextUrl.pathname.includes('/app');
 
@@ -62,7 +60,6 @@ const config = {
       }
 
       if (!isLoggedIn && !isTryingToAccessApp) {
-        // return Response.redirect(new URL('/login', request.nextUrl));
         return true;
       }
 
@@ -79,11 +76,8 @@ const config = {
       return token;
     },
     session: ({ session, token }) => {
-      if (token) {
-        session.user = {
-          id: token.id,
-          email: token.email,
-        };
+      if (session.user) {
+        session.user.id = token.id;
       }
       return session;
     },

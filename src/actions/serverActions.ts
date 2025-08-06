@@ -64,26 +64,25 @@ export const getPets = async (): Promise<Pet[]> => {
 export const addPet = async (
   pet: unknown,
 ): Promise<{ message: string } | undefined> => {
+  const session = await auth();
+  if (!session?.user) {
+    redirect('/login');
+  }
+
   const validatedPet = petFormSchema.safeParse(pet);
   if (!validatedPet.success) {
     return { message: 'Invalid pet data.' };
   }
 
-  // tmp, for the new try block
-  // const session = await auth();
-  // if (!session?.user) {
-  //   return { message: 'User not authenticated.' };
-  // }
   try {
-    await prisma.pet.create({ data: validatedPet.data });
-    // await prisma.pet.create({
-    //   data: {
-    //     ...validatedPet.data,
-    //     User: {
-    //       connect: { id: session.user.id },
-    //     },
-    //   },
-    // });
+    await prisma.pet.create({
+      data: {
+        ...validatedPet.data,
+        user: {
+          connect: { id: session.user.id },
+        },
+      },
+    });
   } catch (error) {
     return {
       message: `Error adding pet: ${error}`,
