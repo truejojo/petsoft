@@ -46,7 +46,6 @@ const config = {
       const isTryingToAccessApp = request.nextUrl.pathname.includes('/app');
 
       if (!isLoggedIn && isTryingToAccessApp) {
-        // return request?.nextauth?.token?.sub ? true : false;
         return false;
       }
 
@@ -54,9 +53,16 @@ const config = {
         return true;
       }
 
-      if (!isTryingToAccessApp) {
+      if (isLoggedIn && !isTryingToAccessApp) {
+        return Response.redirect(new URL('/app/dashboard', request.nextUrl));
+      }
+
+      if (!isLoggedIn && !isTryingToAccessApp) {
+        // return Response.redirect(new URL('/login', request.nextUrl));
         return true;
       }
+
+      return false;
     },
   },
 } satisfies NextAuthConfig;
