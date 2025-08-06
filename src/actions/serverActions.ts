@@ -120,12 +120,32 @@ export const editPet = async (
 export const deletePet = async (
   id: unknown,
 ): Promise<{ message: string } | undefined> => {
-  const validatedId = petIdSchema.safeParse(id);
+  // authentication session
+  const session = await auth();
+  if (!session?.user) {
+    redirect('/login');
+  }
 
+  // validate
+  const validatedId = petIdSchema.safeParse(id);
   if (!validatedId.success) {
     return { message: 'Invalid pet ID format.' };
   }
 
+  // authorization check
+  const pet = await prisma.pet.findUnique({
+    where: { id: validatedId.data },
+  });
+
+  if (!pet) {
+    return { message: 'Pet not found.' };
+  }
+
+  if (pet.userId !== session.user.id) {
+    return { message: 'Unauthorized.' };
+  }
+
+  // database mutation
   try {
     await prisma.pet.delete({
       where: { id: validatedId.data },
