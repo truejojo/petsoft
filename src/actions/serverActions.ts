@@ -2,16 +2,17 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { signIn, signOut } from '@/lib/auth';
+import { auth, signIn, signOut } from '@/lib/auth';
 import { petFormSchema, petIdSchema } from '@/lib/schema';
 import { Pet } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
+import { redirect } from 'next/navigation';
 
 // ---- user actions ----
 export const logIn = async (formData: FormData) => {
-  // const authData = Object.fromEntries(formData.entries());
+  const authData = Object.fromEntries(formData.entries());
 
-  await signIn('credentials', formData);
+  await signIn('credentials', authData);
 };
 
 export const logOut = async () => {
@@ -20,7 +21,8 @@ export const logOut = async () => {
 };
 
 export const signUp = async (formData: FormData) => {
-  // const authData = Object.fromEntries(formData.entries());
+  const authData = Object.fromEntries(formData.entries());
+
   const hashedPassword = await bcrypt.hash(
     formData.get('password') as string,
     10,
@@ -34,13 +36,25 @@ export const signUp = async (formData: FormData) => {
     },
   });
 
-  await signIn('credentials', formData);
+  await signIn('credentials', authData);
+  // await signIn('credentials', {
+  //   email,
+  //   hashedPassword,
+  // });
 };
 
 // --- pet actions ---
 export const getPets = async (): Promise<Pet[]> => {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect('/login');
+  }
+
   try {
-    return await prisma.pet.findMany();
+    return await prisma.pet.findMany({
+      where: { userId: session.user.id },
+    });
   } catch (error) {
     console.error('Error fetching pets:', error);
     throw error;
@@ -55,8 +69,21 @@ export const addPet = async (
     return { message: 'Invalid pet data.' };
   }
 
+  // tmp, for the new try block
+  // const session = await auth();
+  // if (!session?.user) {
+  //   return { message: 'User not authenticated.' };
+  // }
   try {
     await prisma.pet.create({ data: validatedPet.data });
+    // await prisma.pet.create({
+    //   data: {
+    //     ...validatedPet.data,
+    //     User: {
+    //       connect: { id: session.user.id },
+    //     },
+    //   },
+    // });
   } catch (error) {
     return {
       message: `Error adding pet: ${error}`,

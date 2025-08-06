@@ -17,6 +17,10 @@ const config = {
       async authorize(credentials) {
         const { email, password } = credentials || {};
 
+        if (typeof password !== 'string' || typeof email !== 'string') {
+          return null;
+        }
+
         const user = await prisma.user.findUnique({
           where: { email },
         });
@@ -63,6 +67,25 @@ const config = {
       }
 
       return false;
+    },
+    jwt: ({ token, user }) => {
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          email: user.email,
+        };
+      }
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (token) {
+        session.user = {
+          id: token.id,
+          email: token.email,
+        };
+      }
+      return session;
     },
   },
 } satisfies NextAuthConfig;
