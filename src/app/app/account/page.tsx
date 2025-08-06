@@ -1,5 +1,6 @@
 import ContentBlock from '@/components/contentBlock';
 import H1 from '@/components/h1';
+import SignOutButton from '@/components/signOutButton';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -14,6 +15,7 @@ const AccountPage = async () => {
    * For now, we redirect to the login page if the user is not logged in.
    * And it is a good idea to make this check, because middleware is not run on the server side,
    * so we cannot rely on it to protect server components.
+   * ergo: make this check here and in all other server components that require authentication.
    */
   if (!session?.user) {
     redirect('/login');
@@ -23,8 +25,9 @@ const AccountPage = async () => {
     <main className='space-y-10'>
       <H1 className='mt-8'>Your Accout</H1>
 
-      <ContentBlock className='flex flex-col items-center justify-center h-[500px]'>
-        Logged in as {session?.user.email}.
+      <ContentBlock className='flex flex-col items-center justify-center gap-4 h-[500px]'>
+        <p>Logged in as {session?.user.email}.</p>
+        <SignOutButton />
       </ContentBlock>
     </main>
   );
