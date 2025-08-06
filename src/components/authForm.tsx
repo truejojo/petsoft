@@ -2,13 +2,13 @@ import FormFieldWrapper from './formFieldWrapper';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { logIn } from '@/actions/serverActions';
+import { logIn, signUp } from '@/actions/serverActions';
 
 type AuthFormProps = { type: 'login' | 'signup' };
 
 const AuthForm = ({ type }: AuthFormProps) => {
   return (
-    <form action={logIn} className='space-y-4'>
+    <form action={type === 'login' ? logIn : signUp} className='space-y-4'>
       <FormFieldWrapper>
         <Label htmlFor='email'>Email</Label>
         <Input id='email' name='email' type='email' />
