@@ -7,6 +7,7 @@ import { petFormSchema, petIdSchema } from '@/lib/schema';
 import { Pet } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
 import { redirect } from 'next/navigation';
+import { checkAuth } from '@/lib/serverUtils';
 
 // ---- user actions ----
 export const logIn = async (formData: FormData) => {
@@ -37,19 +38,11 @@ export const signUp = async (formData: FormData) => {
   });
 
   await signIn('credentials', authData);
-  // await signIn('credentials', {
-  //   email,
-  //   hashedPassword,
-  // });
 };
 
 // --- pet actions ---
 export const getPets = async (): Promise<Pet[]> => {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect('/login');
-  }
+  const session = await checkAuth();
 
   try {
     return await prisma.pet.findMany({
@@ -64,10 +57,7 @@ export const getPets = async (): Promise<Pet[]> => {
 export const addPet = async (
   pet: unknown,
 ): Promise<{ message: string } | undefined> => {
-  const session = await auth();
-  if (!session?.user) {
-    redirect('/login');
-  }
+  const session = await checkAuth();
 
   const validatedPet = petFormSchema.safeParse(pet);
   if (!validatedPet.success) {
@@ -97,10 +87,7 @@ export const editPet = async (
   id: unknown,
 ): Promise<{ message: string } | undefined> => {
   // authentication check
-  const session = await auth();
-  if (!session?.user) {
-    redirect('/login');
-  }
+  const session = await checkAuth();
 
   // validation
   const validatedPet = petFormSchema.safeParse(pet);
@@ -142,10 +129,7 @@ export const deletePet = async (
   id: unknown,
 ): Promise<{ message: string } | undefined> => {
   // authentication check
-  const session = await auth();
-  if (!session?.user) {
-    redirect('/login');
-  }
+  const session = await checkAuth();
 
   // validate
   const validatedId = petIdSchema.safeParse(id);

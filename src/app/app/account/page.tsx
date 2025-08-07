@@ -1,12 +1,9 @@
 import ContentBlock from '@/components/contentBlock';
 import H1 from '@/components/h1';
 import SignOutButton from '@/components/signOutButton';
-import { auth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { checkAuth } from '@/lib/serverUtils';
 
 const AccountPage = async () => {
-  const session = await auth();
-
   /**
    * nextAuth 5, is at the time of writing, not yet released.
    * So, we take this temporary approach to check if the user is logged in.
@@ -17,9 +14,7 @@ const AccountPage = async () => {
    * so we cannot rely on it to protect server components.
    * ergo: make this check here and in all other server components that require authentication.
    */
-  if (!session?.user) {
-    redirect('/login');
-  }
+  const session = await checkAuth();
 
   return (
     <main className='space-y-10'>
