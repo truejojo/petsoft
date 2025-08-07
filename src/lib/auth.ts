@@ -2,7 +2,7 @@ import NextAuth, { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { getUserByEmail } from './serverUtils';
-import { authSchema, TAuthSchema } from '@/lib/schema';
+import { authSchema } from '@/lib/schema';
 
 const config = {
   pages: {

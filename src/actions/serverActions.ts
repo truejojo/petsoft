@@ -11,10 +11,10 @@ import { authSchema, petFormSchema, petIdSchema } from '@/lib/schema';
 import { checkAuth, getPetById, getPetByUserId } from '@/lib/serverUtils';
 
 // ---- user actions ----
-export const logIn = async (formData: unknown) => {
-  if (!formData || !(formData instanceof FormData)) {
-    return { message: 'Invalid form data.' };
-  }
+export const logIn = async (formData: FormData): Promise<void> => {
+  // if (!formData || !(formData instanceof FormData)) {
+  //   return { message: 'Invalid form data.' };
+  // }
 
   await signIn('credentials', formData);
 
@@ -29,15 +29,16 @@ export const logOut = async () => {
   await signOut({ redirectTo: '/' });
 };
 
-export const signUp = async (formData: unknown) => {
-  if (!formData || !(formData instanceof FormData)) {
-    return { message: 'Invalid form data.' };
-  }
+export const signUp = async (formData: FormData): Promise<void> => {
+  // if (!formData || !(formData instanceof FormData)) {
+  //   return { message: 'Invalid form data.' };
+  // }
 
   const formDataEntries = Object.fromEntries(formData.entries());
   const validatedFormData = authSchema.safeParse(formDataEntries);
   if (!validatedFormData.success) {
-    return { message: 'Invalid form data.' };
+    throw new Error('Invalid form data.');
+    //return; // { message: 'Invalid form data.' };
   }
 
   const { email, password } = validatedFormData.data;

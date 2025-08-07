@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { Resolver, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogFooter } from './ui/dialog';
 import { Button } from './ui/button';
@@ -22,7 +22,7 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
   const { selectedPet, handleAddPet, handleEditPet } = usePetContextProvider();
 
   // Stabilisiere die DefaultValues mit useMemo
-  const petDefaultValues = useMemo(
+  const petDefaultValues = useMemo<TPetFormSchema>(
     () => ({
       name: selectedPet?.name ?? '',
       ownerName: selectedPet?.ownerName ?? '',
@@ -41,8 +41,17 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
     // reset,
     // setFocus,
   } = useForm<TPetFormSchema>({
-    resolver: zodResolver(petFormSchema),
-    defaultValues: actionType === 'add' ? {} : petDefaultValues,
+    resolver: zodResolver(petFormSchema) as Resolver<TPetFormSchema>,
+    defaultValues:
+      actionType === 'edit'
+        ? petDefaultValues
+        : {
+            name: '',
+            ownerName: '',
+            imageUrl: '',
+            age: 0,
+            notes: '',
+          },
     shouldFocusError: true,
   });
 
