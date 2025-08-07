@@ -1,3 +1,5 @@
+import "server-only";
+
 import { User } from 'next-auth';
 
 declare module 'next-auth' {
