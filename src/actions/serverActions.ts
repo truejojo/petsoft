@@ -2,22 +2,26 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { auth, signIn, signOut } from '@/lib/auth';
+import { signIn, signOut } from '@/lib/auth';
 import { petFormSchema, petIdSchema } from '@/lib/schema';
 import { Pet } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
-import { redirect } from 'next/navigation';
-import { checkAuth } from '@/lib/serverUtils';
+import { checkAuth, getPetById, getPetByUserId } from '@/lib/serverUtils';
 
 // ---- user actions ----
 export const logIn = async (formData: FormData) => {
   const authData = Object.fromEntries(formData.entries());
 
+  // change to serverUtils function
+  // in try catch block
   await signIn('credentials', authData);
 };
 
 export const logOut = async () => {
   // 'use server';
+
+  // change to serverUtils function
+  // in try catch block
   await signOut({ redirectTo: '/' });
 };
 
@@ -30,6 +34,8 @@ export const signUp = async (formData: FormData) => {
   );
   const email = formData.get('email') as string;
 
+  // change to serverUtils function
+  // in try catch block
   await prisma.user.create({
     data: {
       email,
@@ -45,9 +51,7 @@ export const getPets = async (): Promise<Pet[]> => {
   const session = await checkAuth();
 
   try {
-    return await prisma.pet.findMany({
-      where: { userId: session.user.id },
-    });
+    return await getPetByUserId(session.user.id);
   } catch (error) {
     console.error('Error fetching pets:', error);
     throw error;
@@ -65,6 +69,7 @@ export const addPet = async (
   }
 
   try {
+    // change to serverUtils function
     await prisma.pet.create({
       data: {
         ...validatedPet.data,
@@ -98,9 +103,7 @@ export const editPet = async (
   }
 
   // authorization check
-  const petToEdit = await prisma.pet.findUnique({
-    where: { id: validatedId.data },
-  });
+  const petToEdit = await getPetById(validatedId.data);
 
   if (!petToEdit) {
     return { message: 'Pet not found.' };
@@ -112,6 +115,7 @@ export const editPet = async (
 
   // database mutation
   try {
+    // change to serverUtils function
     await prisma.pet.update({
       where: { id: validatedId.data },
       data: validatedPet.data,
@@ -138,9 +142,7 @@ export const deletePet = async (
   }
 
   // authorization check
-  const pet = await prisma.pet.findUnique({
-    where: { id: validatedId.data },
-  });
+  const pet = await getPetById(validatedId.data);
 
   if (!pet) {
     return { message: 'Pet not found.' };
@@ -152,6 +154,7 @@ export const deletePet = async (
 
   // database mutation
   try {
+    // change to serverUtils function
     await prisma.pet.delete({
       where: { id: validatedId.data },
     });

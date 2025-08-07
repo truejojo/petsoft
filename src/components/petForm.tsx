@@ -73,6 +73,12 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
           petData.imageUrl ||
           'https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png';
 
+        // Add userId to petData for PetEssentials type
+        // const petDataWithUserId = {
+        //   ...petData,
+        //   userId: selectedPet?.userId ?? '', // or provide the correct userId here
+        // };
+
         if (actionType === 'add') {
           await handleAddPet(petData);
         } else if (actionType === 'edit') {

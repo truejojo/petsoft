@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { prisma } from './db';
 import bcrypt from 'bcryptjs';
+import { getUserByEmail } from './serverUtils';
 
 const config = {
   pages: {
@@ -16,19 +16,16 @@ const config = {
     Credentials({
       async authorize(credentials) {
         const { email, password } = credentials || {};
-
         if (typeof password !== 'string' || typeof email !== 'string') {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
-
+        const user = await getUserByEmail(email);
         if (!user) {
           console.log('No user found');
           return null;
         }
+
         const passwordsMatch = await bcrypt.compare(
           password,
           user.hashedPassword,
