@@ -7,14 +7,17 @@ import { petFormSchema, petIdSchema } from '@/lib/schema';
 import { Pet } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
 import { checkAuth, getPetById, getPetByUserId } from '@/lib/serverUtils';
+import { redirect } from 'next/navigation';
 
 // ---- user actions ----
-export const logIn = async (formData: FormData) => {
-  const authData = Object.fromEntries(formData.entries());
+export const logIn = async (formData: unknown) => {
+  if (!formData || !(formData instanceof FormData)) {
+    return { message: 'Invalid form data.' };
+  }
 
-  // change to serverUtils function
-  // in try catch block
-  await signIn('credentials', authData);
+  await signIn('credentials', formData);
+
+  redirect('/app/dashboard');
 };
 
 export const logOut = async () => {

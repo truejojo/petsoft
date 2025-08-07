@@ -36,6 +36,19 @@ export const petFormSchema = z.object({
 //     'https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png',
 // }));
 
+export type TPetFormSchema = z.infer<typeof petFormSchema>;
+
 export const petIdSchema = z.string().regex(/^c[a-z0-9]{24}$/, {
   message: 'Invalid Pet ID format',
 });
+
+// export const authSchema = z.object({
+//   email: z.string().email('Invalid email format').max(100, 'Email is too long'),
+//   password: z.string().min(4, 'Password must be at least 4 characters').max(100, 'Password is too long'),
+// });
+export const authSchema = z.object({
+  email: z.string().email('Invalid email format').max(25),
+  password: z.string().max(10),
+});
+
+export type TAuthSchema = z.infer<typeof authSchema>;

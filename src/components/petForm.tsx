@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
-import { petFormSchema } from '@/lib/schema';
+import { petFormSchema, TPetFormSchema } from '@/lib/schema';
 import FormFieldWrapper from './formFieldWrapper';
 import ErrorMessage from './errorMessage';
 
@@ -40,27 +40,11 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
     getValues,
     // reset,
     // setFocus,
-  } = useForm({
+  } = useForm<TPetFormSchema>({
     resolver: zodResolver(petFormSchema),
     defaultValues: actionType === 'add' ? {} : petDefaultValues,
     shouldFocusError: true,
   });
-
-  // Reset nur beim Wechsel des ausgewählten Pets
-  // useEffect(() => {
-  //   if (actionType === 'edit' && selectedPet) {
-  //     reset(petDefaultValues);
-  //   }
-  // }, [petDefaultValues, actionType, reset, selectedPet]);
-
-  // Fokus auf das erste Fehlerfeld
-  // useEffect(() => {
-  //   if (errors.name) setFocus('name');
-  //   else if (errors.ownerName) setFocus('ownerName');
-  //   else if (errors.imageUrl) setFocus('imageUrl');
-  //   else if (errors.age) setFocus('age');
-  //   else if (errors.notes) setFocus('notes');
-  // }, [errors, setFocus]);
 
   return (
     <form
@@ -68,16 +52,11 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
         const result = await trigger();
         if (!result) return;
 
-        const petData = petFormSchema.parse(getValues());
+        // const petData = petFormSchema.parse(getValues());
+        const petData = getValues();
         petData.imageUrl =
           petData.imageUrl ||
           'https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png';
-
-        // Add userId to petData for PetEssentials type
-        // const petDataWithUserId = {
-        //   ...petData,
-        //   userId: selectedPet?.userId ?? '', // or provide the correct userId here
-        // };
 
         if (actionType === 'add') {
           await handleAddPet(petData);
