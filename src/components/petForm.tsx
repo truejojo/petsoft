@@ -89,7 +89,11 @@ const PetForm = ({ actionType, onFormSubmission }: PetFormProps) => {
       </FormFieldWrapper>
       <FormFieldWrapper>
         <Label htmlFor='age'>Age</Label>
-        <Input id='age' {...register('age')} />
+        <Input
+          id='age'
+          type='number'
+          {...register('age', { valueAsNumber: true })}
+        />
         {errors.age && <ErrorMessage>{errors.age.message}</ErrorMessage>}
       </FormFieldWrapper>
       <FormFieldWrapper>

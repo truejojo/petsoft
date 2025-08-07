@@ -1,13 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { prisma } from '@/lib/db';
-import { signIn, signOut } from '@/lib/auth';
-import { petFormSchema, petIdSchema } from '@/lib/schema';
+import { redirect } from 'next/navigation';
 import { Pet } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
+
+import { prisma } from '@/lib/db';
+import { signIn, signOut } from '@/lib/auth';
+import { authSchema, petFormSchema, petIdSchema } from '@/lib/schema';
 import { checkAuth, getPetById, getPetByUserId } from '@/lib/serverUtils';
-import { redirect } from 'next/navigation';
 
 // ---- user actions ----
 export const logIn = async (formData: unknown) => {
@@ -28,15 +29,19 @@ export const logOut = async () => {
   await signOut({ redirectTo: '/' });
 };
 
-export const signUp = async (formData: FormData) => {
-  const authData = Object.fromEntries(formData.entries());
+export const signUp = async (formData: unknown) => {
+  if (!formData || !(formData instanceof FormData)) {
+    return { message: 'Invalid form data.' };
+  }
 
-  const hashedPassword = await bcrypt.hash(
-    formData.get('password') as string,
-    10,
-  );
-  const email = formData.get('email') as string;
+  const formDataEntries = Object.fromEntries(formData.entries());
+  const validatedFormData = authSchema.safeParse(formDataEntries);
+  if (!validatedFormData.success) {
+    return { message: 'Invalid form data.' };
+  }
 
+  const { email, password } = validatedFormData.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
   // change to serverUtils function
   // in try catch block
   await prisma.user.create({
@@ -46,7 +51,7 @@ export const signUp = async (formData: FormData) => {
     },
   });
 
-  await signIn('credentials', authData);
+  await signIn('credentials', formData);
 };
 
 // --- pet actions ---
