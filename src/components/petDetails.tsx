@@ -2,9 +2,8 @@
 
 import Image from 'next/image';
 import { usePetContextProvider } from '@/app/app/hooks/usePetContextProvider';
-import type { PetProps } from '@/types';
+import type { Pet } from '@/generated/prisma';
 import PetButton from './petButton';
-// import { deletePet } from '@/actions/serverActions';
 
 const PetDetails = () => {
   const { selectedPet } = usePetContextProvider();
@@ -29,7 +28,7 @@ const PetDetails = () => {
 export default PetDetails;
 
 type Props = {
-  pet: PetProps;
+  pet: Pet;
 };
 
 const TopBar = ({ pet }: Props) => {
