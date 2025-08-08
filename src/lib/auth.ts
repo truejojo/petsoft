@@ -34,14 +34,8 @@ const config = {
           user.hashedPassword,
         );
         if (!passwordsMatch) {
-          console.log('Password does not match');
           return null;
         }
-        console.log('***************************************************');
-        console.log('Credentials:', credentials);
-        console.log('User:', user);
-        console.log('PasswordsMatch:', passwordsMatch);
-        console.log('***************************************************');
 
         return user;
       },

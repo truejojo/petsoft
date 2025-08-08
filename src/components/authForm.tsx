@@ -1,7 +1,7 @@
 import FormFieldWrapper from './formFieldWrapper';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './ui/input';
-import { Button } from './ui/button';
+import AuthFormButton from './authFormButton';
 import { logIn, signUp } from '@/actions/serverActions';
 
 type AuthFormProps = { type: 'login' | 'signup' };
@@ -33,7 +33,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         />
       </FormFieldWrapper>
 
-      <Button type='submit'>{type === 'login' ? 'Log In' : 'Sign Up'}</Button>
+      <AuthFormButton type={type} />
     </form>
   );
 };

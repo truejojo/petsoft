@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Pet, Prisma } from '@/generated/prisma';
+import { Pet } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
 
 import { prisma } from '@/lib/db';
@@ -22,8 +22,9 @@ export const logIn = async (
   }
 };
 
-// : Promise<{ message: string }>
-export const signUp = async (formData: FormData) => {
+export const signUp = async (
+  formData: FormData,
+): Promise<{ message: string }> => {
   try {
     const formDataEntries = Object.fromEntries(formData.entries());
     const validatedFormData = authSchema.safeParse(formDataEntries);
@@ -44,12 +45,7 @@ export const signUp = async (formData: FormData) => {
     await signIn('credentials', formData);
     redirect('/app/dashboard');
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        return { message: 'Email already exists.' };
-      }
-      return { message: `Signup failed: ${error}` };
-    }
+    return { message: `Signup failed: ${error}` };
   }
 };
 
@@ -118,6 +114,7 @@ export const editPet = async (
     revalidatePath('/app', 'layout');
     return { message: 'Pet updated successfully.' };
   } catch (error) {
+    // Fängt ALLE Fehler ab, auch von checkAuth()
     return { message: `Error editing pet: ${error}` };
   }
 };
