@@ -1,3 +1,6 @@
+'use client';
+
+import { useActionState } from 'react';
 import FormFieldWrapper from './formFieldWrapper';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './ui/input';
@@ -7,8 +10,14 @@ import { logIn, signUp } from '@/actions/serverActions';
 type AuthFormProps = { type: 'login' | 'signup' };
 
 const AuthForm = ({ type }: AuthFormProps) => {
+  const [signUpError, dispatchSignUp] = useActionState(signUp, undefined);
+  const [logInError, dispatchLogIn] = useActionState(logIn, undefined);
+
   return (
-    <form action={type === 'login' ? logIn : signUp} className='space-y-4'>
+    <form
+      action={type === 'login' ? dispatchLogIn : dispatchSignUp}
+      className='space-y-4'
+    >
       <FormFieldWrapper>
         <Label htmlFor='email'>Email</Label>
         <Input
@@ -34,6 +43,17 @@ const AuthForm = ({ type }: AuthFormProps) => {
       </FormFieldWrapper>
 
       <AuthFormButton type={type} />
+
+      {signUpError && (
+        <div className='text-red-500 text-sm'>
+          {signUpError.message || 'An error occurred. Please try again.'}
+        </div>
+      )}
+      {logInError && (
+        <div className='text-red-500 text-sm'>
+          {logInError.message || 'An error occurred. Please try again.'}
+        </div>
+      )}
     </form>
   );
 };

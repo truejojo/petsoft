@@ -12,19 +12,45 @@ import { checkAuth, getPetById, getPetByUserId } from '@/lib/serverUtils';
 
 // ---- user actions ----
 export const logIn = async (
+  prevState: unknown,
   formData: FormData,
-): Promise<{ message: string }> => {
+): Promise<
+  | {
+      message: string;
+    }
+  | undefined
+> => {
   try {
     await signIn('credentials', formData);
     redirect('/app/dashboard');
   } catch (error) {
-    return { message: `Login failed: ${error}` };
+    if (error instanceof Error) {
+      switch (error.name) {
+        case 'CredentialsSignin': {
+          return { message: 'Invalid email or password.' };
+        }
+        case 'SessionNotFound': {
+          return { message: 'Session not found. Please log in again.' };
+        }
+        default: {
+          return { message: `Login failed` };
+        }
+      }
+    }
+
+    throw error; // Re-throw if it's not an instance of Error
   }
 };
 
 export const signUp = async (
+  prevState: unknown,
   formData: FormData,
-): Promise<{ message: string }> => {
+): Promise<
+  | {
+      message: string;
+    }
+  | undefined
+> => {
   try {
     const formDataEntries = Object.fromEntries(formData.entries());
     const validatedFormData = authSchema.safeParse(formDataEntries);
@@ -45,7 +71,17 @@ export const signUp = async (
     await signIn('credentials', formData);
     redirect('/app/dashboard');
   } catch (error) {
-    return { message: `Signup failed: ${error}` };
+    // return { message: `Signup failed: ${error}` };
+    if (error instanceof Error) {
+      switch (error.name) {
+        case 'UniqueConstraintViolationError': {
+          return { message: 'Email already exists.' };
+        }
+        default: {
+          return { message: `Signup failed: ${error.message}` };
+        }
+      }
+    }
   }
 };
 
